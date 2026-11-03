@@ -1,8 +1,7 @@
 """Typed exception hierarchy of the maze engine (owner: pagente A).
 
 Every engine failure raises a subclass of :class:`MazeError`, so `app/`
-can catch one type and show a friendly message without tracebacks
-(piscina PM02: exceptions, ``try/except`` and clean failure paths).
+can catch one type and show a friendly message without tracebacks.
 
 Exceptions here must stay independent of any GUI or terminal detail —
 they carry plain data (messages, offending values only).

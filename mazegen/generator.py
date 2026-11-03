@@ -3,9 +3,8 @@
 Why this algorithm: it guarantees a *perfect* maze (spanning tree, no
 loops) in linear time, is seed-reproducible and carves one cell per
 step — which makes the :meth:`MazeGenerator.steps` animation hook
-trivial (piscina PM03: ``random.Random`` determinism, dict/set
-structures; PM10: ``yield`` generator driving the hook without
-recursion limits, thanks to the explicit stack).
+trivial, thanks to the explicit stack that replaces recursion and the
+``yield`` generator that drives the hook.
 """
 
 from __future__ import annotations

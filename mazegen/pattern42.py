@@ -6,10 +6,8 @@ both protect the pattern's fully-closed cells.
 
 The pattern is drawn with fully enclosed cells (all four masks raised).
 Nothing here prints anything: `app/` calls :func:`pattern_fits` and
-decides itself which console message fits its language.
-
-(piscina: PM03 — tuplas/strings imutáveis, funções puras e chaves
-determinísticas — os candidatos vêm ordenados sem depender da seed.)
+decides itself which console message fits its language. Anchor
+candidates come sorted without depending on the generation seed.
 """
 
 from __future__ import annotations

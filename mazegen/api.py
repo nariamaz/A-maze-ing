@@ -1,10 +1,9 @@
 """Public interface of the maze engine (owner: pagente A).
 
 ``AbstractMazeGenerator`` is the template every algorithm must follow.
-Declaring it as an ABC (piscina PM05/PM07: abstract classes, interfaces
-and the Template/Strategy design styles) lets future bonus algorithms
-plug in without touching `app/`: the application layer depends only on
-this shape, never on a concrete class.
+Declaring it as an ABC lets future bonus algorithms plug in without
+touching `app/`: the application layer depends only on this shape,
+never on a concrete class.
 """
 
 from __future__ import annotations
