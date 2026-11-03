@@ -87,23 +87,13 @@ A-Maze-ing/
 `mazegen/` não importa nada de `app/`; a dependência vai só de
 `app/` para `mazegen/` (o pacote precisa instalar sozinho via pip).
 
-## 4. Fases e cronograma (02 → 20/11)
-
-| Fase | A | B |
-|---|---|---|
-| Fase 1 (03-05/11) | grid + backtracker + "42" + seed | etapas 1, 2 (entry + parser) |
-| Fase 2 (06-10/11) | solver BFS + braiding | encoder hex + arquivo + render + menu |
-| Fase 3 (11-14/11) | empacotamento (pyproject/whl) | animação + Makefile + lint config |
-| Fase 4 (15-18/11) | integração, cross-tests, README | walkthrough mútuo, dupla revisão |
-| 19-20/11 | buffer + defesa | buffer + defesa |
-
-## 5. Cuidados para a peer evaluation
+## 4. Cuidados para a peer evaluation
 
 * Cada um precisa conseguir explicar a metade do outro (walkthrough mútuo).
 * O 42 pode pedir uma pequena modificação ao vivo: ambos mexem em qualquer parte.
 * O hook da animação ficou combinado na fase do contrato, não no final.
 
-## 6. README por seção (owners)
+## 5. README por seção (owners)
 
 | Seção | Owner |
 |---|---|
