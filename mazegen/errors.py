@@ -30,3 +30,7 @@ class OverlappingEndpointsError(MazeError):
 class PatternCollisionError(MazeError):
     """The board could host the "42", but no anchor avoids
     both ``entry`` and ``exit``."""
+
+
+class NoSolutionError(MazeError):
+    """No open route connects ``entry`` and ``exit`` in the grid."""

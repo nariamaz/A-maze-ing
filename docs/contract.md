@@ -11,7 +11,7 @@ config.txt ─► [1 Parser B] ─► [2 Gerador A] ─► Maze
                           ┌────────────────┴───────────┐
                           ▼                            ▼
                  [3 Solver BFS A]              [4 Encoder hex B]
-                 caminho "N/E/S/W"             1 dígito hex/célula
+                 letras N/E/S/W               1 dígito hex/célula
                           └────────────────┬───────────┘
                                            ▼
                           [5 Escrita do arquivo B]
@@ -36,8 +36,10 @@ Até lá, B usa um grid fixo pequeno, seguindo a convenção de bits abaixo.
     A não conhece terminal nem `time.sleep`.
   * `grid` — dicionário `Cell -> bitmask` para TODAS as células
     (as do "42" vêm com bitmask 15, isoladas).
-  * `solution` — conexão do solver: propriedade que expõe
-    `mony` de entrada e saída + path `"N/E/S/W"`.
+  * `solution` — conexão do solver (BFS, caminho mais curto):
+    propriedade que expõe `(entrada, saída, path)`; `path` usa as
+    letras N/E/S/W concatenadas, uma por movimento (ex.: `"ESENEEE"`),
+    formato fixado pelo exemplo do §IV.5 do subject (p.11).
   * `pattern` — frozenset das células fechadas do "42"
     (vazio se tabuleiro pequeno demais; B avisa no console).
 

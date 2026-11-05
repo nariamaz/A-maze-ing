@@ -52,8 +52,11 @@ class AbstractMazeGenerator(ABC):
 
     @property
     def solution(self) -> Tuple[Cell, Cell, str]:
-        """``(entry, exit, path)`` with path as an ``"N...W"`` string.
+        """``(entry, exit, path)`` once the maze is carved.
 
-        The engine fills it in Fase 2 once the BFS solver lands.
+        ``path`` follows the output file of the subject (section
+        IV.5): one ``N``/``E``/``S``/``W`` letter per move,
+        concatenated. Concrete carvers implement it on top of
+        ``mazegen.solver.solve``.
         """
-        raise NotImplementedError("solver lands in Fase 2")
+        raise NotImplementedError("the concrete carver provides it")

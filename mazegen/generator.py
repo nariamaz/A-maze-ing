@@ -11,9 +11,9 @@ from __future__ import annotations
 
 import random
 from collections.abc import Iterator
-from typing import Optional
+from typing import Optional, Tuple
 
-from mazegen import pattern42
+from mazegen import pattern42, solver
 from mazegen.api import AbstractMazeGenerator
 from mazegen.constants import (
     ALL_WALLS,
@@ -94,6 +94,7 @@ class MazeGenerator(AbstractMazeGenerator):
             for col in range(self.width)
         }
         self._carved = False
+        self._solution: Optional[str] = None
 
     def _check_cell(
         self,
@@ -148,6 +149,33 @@ class MazeGenerator(AbstractMazeGenerator):
     def pattern(self) -> frozenset[Cell]:
         """Closed cells of the "42"; empty when the board is small."""
         return self._pattern
+
+    @property
+    def solution(self) -> Tuple[Cell, Cell, str]:
+        """The shortest route, exposed as ``(entry, exit, path)``.
+
+        ``path`` follows the subject's output-file format (section
+        IV.5): one ``N``/``E``/``S``/``W`` letter per move,
+        concatenated — e.g. ``"ESENEEE"``. The BFS solver of
+        ``mazegen.solver`` computes it on first access, then it is
+        cached; a fresh instance (possibly reusing the same seed)
+        carves and solves its own maze.
+
+        Raises:
+            RuntimeError: When the maze was not carved yet (call
+                :meth:`generate` first).
+        """
+        if not self._carved:
+            raise RuntimeError(
+                "this MazeGenerator did not carve a maze yet; call "
+                "generate() before asking for the solution"
+            )
+        if self._solution is None:
+            self._solution = solver.solve(
+                self._grid, self.width, self.height, self._entry,
+                self._exit,
+            )
+        return (self._entry, self._exit, self._solution)
 
     def steps(self) -> Iterator[Cell]:
         """Carve the maze, yielding every carved cell in order.

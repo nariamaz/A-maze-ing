@@ -9,9 +9,10 @@ from __future__ import annotations
 
 from mazegen.api import AbstractMazeGenerator
 from mazegen.constants import ALL_WALLS, Cell, Direction
-from mazegen.errors import MazeError
+from mazegen.errors import MazeError, NoSolutionError
 from mazegen.generator import MazeGenerator
 from mazegen.pattern42 import pattern_cells, pattern_fits
+from mazegen.solver import solve
 
 __all__ = [
     "ALL_WALLS",
@@ -20,8 +21,10 @@ __all__ = [
     "Direction",
     "MazeError",
     "MazeGenerator",
+    "NoSolutionError",
     "pattern_cells",
     "pattern_fits",
+    "solve",
     "__version__",
 ]
 
