@@ -1,10 +1,14 @@
-"""Concrete maze carver: iterative recursive backtracker (A).
+"""Concrete maze carver: iterative recursive backtracker.
 
 Why this algorithm: it guarantees a *perfect* maze (spanning tree, no
 loops) in linear time, is seed-reproducible and carves one cell per
 step — which makes the :meth:`MazeGenerator.steps` animation hook
 trivial, thanks to the explicit stack that replaces recursion and the
 ``yield`` generator that drives the hook.
+
+With ``perfect=False`` the carving is followed by the braiding pass of
+:mod:`mazegen.braiding` (same random stream, no extra yields), which
+knocks one wall per dead end to weave loops into the board.
 """
 
 from __future__ import annotations
@@ -13,7 +17,7 @@ import random
 from collections.abc import Iterator
 from typing import Optional, Tuple
 
-from mazegen import pattern42, solver
+from mazegen import braiding, pattern42, solver
 from mazegen.api import AbstractMazeGenerator
 from mazegen.constants import (
     ALL_WALLS,
@@ -44,7 +48,7 @@ class MazeGenerator(AbstractMazeGenerator):
         seed: Reproducibility seed; ``None`` gives a new maze every
             run, an equal seed repaints the exact same maze.
         perfect: ``True`` keeps one single path between any two cells;
-            ``False`` braids the board (Fase 2, ``braiding.py``).
+            ``False`` braids the board (``braiding.py``).
         entry: ``(row, col)`` of the entrance cell, inside bounds;
             defaults to ``(0, 0)``.
         exit: ``(row, col)`` of the exit cell, inside bounds; defaults
@@ -187,6 +191,11 @@ class MazeGenerator(AbstractMazeGenerator):
         Raises:
             RuntimeError: If this instance was already generated (the
                 same seed on a fresh instance repeats it exactly).
+
+        With ``perfect=False`` the braid pass of
+        :mod:`mazegen.braiding` runs after the carving loop, reusing
+        this same random stream and yielding nothing extra: the maze
+        is complete — and braided — once the iteration ends.
         """
         if self._carved:
             raise RuntimeError(
@@ -214,6 +223,10 @@ class MazeGenerator(AbstractMazeGenerator):
             raise RuntimeError(
                 "carving left unreachable cells: "
                 f"{len(visited)} visited, {expected} expected"
+            )
+        if not self.perfect:
+            braiding.braid(
+                self._grid, self.width, self.height, self._pattern, rng
             )
         self._carved = True
 

@@ -1,4 +1,4 @@
-"""Public interface of the maze engine (owner: pagente A).
+"""Public interface of the maze engine.
 
 ``AbstractMazeGenerator`` is the template every algorithm must follow.
 Declaring it as an ABC lets future bonus algorithms plug in without
@@ -16,7 +16,7 @@ from mazegen.constants import Cell
 
 
 class AbstractMazeGenerator(ABC):
-    """Contract expected from any maze-carving algorithm.
+    """Interface expected from any maze-carving algorithm.
 
     Subclasses promise:
 

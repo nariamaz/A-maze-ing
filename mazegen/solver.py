@@ -1,4 +1,4 @@
-"""BFS shortest-path solver (owner: pagente A).
+"""BFS shortest-path solver.
 
 The subject asks the output file to carry the shortest valid path from
 entry to exit (section IV.5: entry coordinates, exit coordinates and
@@ -22,7 +22,7 @@ _LETTERS: dict[Direction, str] = {
     Direction.SOUTH: "S",
     Direction.WEST: "W",
 }
-"""Subject IV.5 letter of each direction, one character per move."""
+"""letter of each direction, one character per move."""
 
 
 def solve(

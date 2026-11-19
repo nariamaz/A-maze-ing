@@ -1,7 +1,7 @@
-"""The "42" pattern: closed-cell digits drawn inside the maze (A).
+"""The "42" pattern: closed-cell digits drawn inside the maze.
 
 Holds together the shape data, the candidate anchors and the minimum
-board size, so the backtracker (Fase 1) and the braiding pass (Fase 2)
+board size, so the backtracker and the braiding pass
 both protect the pattern's fully-closed cells.
 
 The pattern is drawn with fully enclosed cells (all four masks raised).

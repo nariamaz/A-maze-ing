@@ -1,12 +1,11 @@
-"""Shared wall encoding contract (A+B) — the single source of truth.
+"""Shared wall encoding — the single source of truth.
 
 * Each cell stores its walls as one 4-bit bitmask (``int``).
 * A closed wall raises the bit; an open passage clears it.
 * Values follow the output-file format of the subject:
   ``N = 1, E = 2, S = 4, W = 8``.
 
-`app/` may add its own helpers, but these numeric values never change
-without an agreement logged in ``docs/contract.md``.
+`app/` may add its own helpers, but these numeric values are fixed.
 """
 
 from __future__ import annotations

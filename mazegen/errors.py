@@ -1,4 +1,4 @@
-"""Typed exception hierarchy of the maze engine (owner: pagente A).
+"""Typed exception hierarchy of the maze engine.
 
 Every engine failure raises a subclass of :class:`MazeError`, so `app/`
 can catch one type and show a friendly message without tracebacks.
