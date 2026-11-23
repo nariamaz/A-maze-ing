@@ -16,8 +16,18 @@ from typing import Callable, List, Tuple
 
 Coordinates = Tuple[int, int]
 
-PATTERN_4: Tuple[str, ...] = ("#..#", "#..#", "####", "...#", "...#")
-PATTERN_2: Tuple[str, ...] = ("###.", "..##", "..#.", "#...", "####")
+PATTERN_4: Tuple[str, ...] = (
+    "#..#",
+    "#..#",
+    "####",
+    "...#",
+    "...#")
+PATTERN_2: Tuple[str, ...] = (
+    "####",
+    "...#",
+    "####",
+    "#...",
+    "####")
 PATTERN_HEIGHT: int = len(PATTERN_4)
 GAP: int = 1
 PATTERN_WIDTH: int = len(PATTERN_4[0]) + GAP + len(PATTERN_2[0])

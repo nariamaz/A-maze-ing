@@ -1,9 +1,9 @@
 # Este arquivo traz as configuracoes.
 
-WIDTH= 30
-HEIGHT= 30
+WIDTH= 20
+HEIGHT= 20
 ENTRY= 0,0
-EXIT= 10,13
+EXIT= 9,13
 OUTPUT_FILE= maze.txt
-SEED= 8
+#SEED=42
 PERFECT= True

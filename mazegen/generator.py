@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import random
 from collections.abc import Iterator
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Any
 
 from mazegen import braiding, pattern42, solver
 from mazegen.api import AbstractMazeGenerator
@@ -32,7 +32,8 @@ from mazegen.errors import (
     OverlappingEndpointsError,
     PatternCollisionError,
 )
-
+from app.visualizer import print_maze
+from time import sleep
 
 class MazeGenerator(AbstractMazeGenerator):
     """Carve a maze with an explicit-stack depth-first walk.
@@ -230,10 +231,13 @@ class MazeGenerator(AbstractMazeGenerator):
             )
         self._carved = True
 
-    def generate(self) -> None:
+    def generate(self, grid: dict[tuple[int, int], int], conf: dict[str, Any]) -> None:
         """Consume :meth:`steps` silently (no animation rendering)."""
+        print("\x1b[2J\x1b[?25l", end="")
         for _ in self.steps():
-            pass
+            print_maze(grid, conf)
+            sleep(1/100)
+        print("\x1b[0m\x1b[?25h")
 
     def _open_walls(self, cell: Cell, direction: Direction) -> None:
         """Clear the shared wall between ``cell`` and its neighbour."""

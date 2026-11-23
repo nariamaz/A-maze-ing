@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
-from typing import Tuple
+from typing import Tuple, Any
 
 from mazegen.constants import Cell
 
@@ -33,7 +33,7 @@ class AbstractMazeGenerator(ABC):
     """
 
     @abstractmethod
-    def generate(self) -> None:
+    def generate(self, grid: dict[tuple[int, int], int], conf: dict[str, Any]) -> None:
         """Carve the entire maze synchronously."""
 
     @abstractmethod
