@@ -20,8 +20,6 @@ def convert_to_value(value: str) -> Any:
         return [int(p) for p in parts]
     return value.strip("\"'")
 
-<<<<<<< Updated upstream
-=======
 def to_cell(point: list[int]) -> tuple[int, int]:
     """Config (x,y) -> engine (row,col)."""
     return point[1], point[0]
@@ -29,7 +27,6 @@ def to_cell(point: list[int]) -> tuple[int, int]:
 def to_xy(cell: tuple[int, int]) -> tuple[int, int]:
     """Engine (row,col) -> config (x,y)."""
     return cell[1], cell[0]
->>>>>>> Stashed changes
 
 def get_config(config_file: str = "config.txt") -> dict[str, Any]:
     lines = read_config_file(config_file)
