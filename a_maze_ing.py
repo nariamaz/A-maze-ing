@@ -1,36 +1,79 @@
-from app import config, visualizer
 from typing import Any
-from contextlib import redirect_stdout
-import mazegen
 import sys
 
+from app import config, visualizer
+from app.colours import THEME_NAMES, DEFAULT_THEME
+import mazegen
 
-if __name__ == "__main__":
-    argc, argv = len(sys.argv), sys.argv
-    config_file = "config.txt"
-    if argc > 1:
-        config_file = argv[1]
-    conf = config.get_config(config_file=config_file)
-    mandatory = ("WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE", "PERFECT")
-    missing = [key for key in mandatory if key not in conf]
-    if missing:
-        print(f"Error: config file does not contain {", ".join(missing)}.")
-        exit(1)
-    in_seed = conf["SEED"] if "SEED" in conf else None
-    in_entry = conf["ENTRY"] if "ENTRY" in conf else None
-    in_exit = conf["EXIT"] if "EXIT" in conf else None
-    in_perfect = conf["PERFECT"] if "PERFECT" in conf else True
-    # TODO: Out of bounds is raised.
-    gen = mazegen.MazeGenerator(width=conf["WIDTH"], height=conf["HEIGHT"], seed=in_seed, perfect=in_perfect, entry=in_entry, exit=in_exit)
-    gen.generate(gen.grid, conf)    
+
+def build_maze(conf: dict[str, Any], seed: int | None):
+    gen = mazegen.MazeGenerator(
+        width=conf["WIDTH"],
+        height=conf["HEIGHT"],
+        seed=seed,
+        perfect=conf["PERFECT"],
+        entry=conf["ENTRY"],
+        exit=conf["EXIT"],
+    )
+    visualizer.animate_generation(gen, conf)     # or gen.generate() for no animation
     walls = gen.grid
     solution = gen.solution
     with open(conf["OUTPUT_FILE"], "w") as f:
-        with redirect_stdout(f):
-            print("--- MAZE HEX ---")
-            visualizer.print_grid(walls, conf)
-            print("\n--- ENTRY AND EXIT ---")
-            print(f"{solution[0][0]}, {solution[0][1]}\n{solution[1][0]}, {solution[1][1]}\n")
-            print("--- SOLUTION ---")
-            print(solution[2])
-    #visualizer.print_maze(walls, conf)
+        print("--- MAZE HEX ---", file=f)
+        visualizer.print_grid(walls, conf, file=f)
+        print("\n--- ENTRY AND EXIT ---", file=f)
+        print(f"{solution[0][0]}, {solution[0][1]}", file=f)
+        print(f"{solution[1][0]}, {solution[1][1]}\n", file=f)
+        print("--- SOLUTION ---", file=f)
+        print(solution[2], file=f)
+    return walls, solution
+
+
+def choose_theme(current: str) -> str:
+    print("Available themes:")
+    for i, name in enumerate(THEME_NAMES, start=1):
+        mark = " (current)" if name == current else ""
+        print(f"  {i}. {name}{mark}")
+    choice = input("Theme number: ").strip()
+    if choice.isdigit() and 1 <= int(choice) <= len(THEME_NAMES):
+        return THEME_NAMES[int(choice) - 1]
+    print("Invalid option, keeping the current theme.")
+    return current
+
+
+def main() -> None:
+    config_file = sys.argv[1] if len(sys.argv) > 1 else "config.txt"
+    conf = config.get_config(config_file=config_file)
+    config.validate_config(conf)
+
+    walls, solution = build_maze(conf, conf.get("SEED"))
+    theme = DEFAULT_THEME
+    show_path = False
+
+    while True:
+        visualizer.clear_screen()
+        cells = visualizer.path_to_cells(solution[0], solution[2]) if show_path else ()
+        visualizer.print_maze(walls, conf, path=cells, theme=theme)
+        print()
+        visualizer.print_menu(theme, show_path)        
+        option = input(visualizer.style("Choice: ", 1)).strip()
+        if option == "1":
+            walls, solution = build_maze(conf, None)
+            show_path = False
+        elif option == "2":
+            show_path = not show_path
+            if show_path:
+                cells = visualizer.path_to_cells(solution[0], solution[2])
+                visualizer.animate_path(walls, conf, cells, theme=theme)
+        elif option == "3":
+            theme = choose_theme(theme)
+        elif option == "4":
+            break
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        print(f"ERROR: {e}")
+        sys.exit(1)

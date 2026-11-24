@@ -231,13 +231,10 @@ class MazeGenerator(AbstractMazeGenerator):
             )
         self._carved = True
 
-    def generate(self, grid: dict[tuple[int, int], int], conf: dict[str, Any]) -> None:
+    def generate(self) -> None:
         """Consume :meth:`steps` silently (no animation rendering)."""
-        print("\x1b[2J\x1b[?25l", end="")
         for _ in self.steps():
-            print_maze(grid, conf)
-            sleep(1/100)
-        print("\x1b[0m\x1b[?25h")
+            pass
 
     def _open_walls(self, cell: Cell, direction: Direction) -> None:
         """Clear the shared wall between ``cell`` and its neighbour."""
