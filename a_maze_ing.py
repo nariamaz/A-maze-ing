@@ -12,8 +12,13 @@ def build_maze(conf: dict[str, Any], seed: int | None):
         height=conf["HEIGHT"],
         seed=seed,
         perfect=conf["PERFECT"],
+<<<<<<< Updated upstream
         entry=conf["ENTRY"],
         exit=conf["EXIT"],
+=======
+        entry=config.to_cell(conf["ENTRY"]),
+        exit=config.to_cell(conf["EXIT"]),
+>>>>>>> Stashed changes
     )
     visualizer.animate_generation(gen, conf)     # or gen.generate() for no animation
     walls = gen.grid
@@ -22,8 +27,15 @@ def build_maze(conf: dict[str, Any], seed: int | None):
         print("--- MAZE HEX ---", file=f)
         visualizer.print_grid(walls, conf, file=f)
         print("\n--- ENTRY AND EXIT ---", file=f)
+<<<<<<< Updated upstream
         print(f"{solution[0][0]}, {solution[0][1]}", file=f)
         print(f"{solution[1][0]}, {solution[1][1]}\n", file=f)
+=======
+        x, y = config.to_xy(solution[0])
+        ex, ey = config.to_xy(solution[1])
+        print(f"{x}, {y}", file=f)
+        print(f"{ex}, {ey}\n", file=f)
+>>>>>>> Stashed changes
         print("--- SOLUTION ---", file=f)
         print(solution[2], file=f)
     return walls, solution
@@ -52,7 +64,11 @@ def main() -> None:
 
     while True:
         visualizer.clear_screen()
+<<<<<<< Updated upstream
         cells = visualizer.path_to_cells(solution[0], solution[2]) if show_path else ()
+=======
+        cells = visualizer.path_to_cells(config.to_xy(solution[0]), solution[2]) if show_path else ()
+>>>>>>> Stashed changes
         visualizer.print_maze(walls, conf, path=cells, theme=theme)
         print()
         visualizer.print_menu(theme, show_path)        
@@ -63,7 +79,11 @@ def main() -> None:
         elif option == "2":
             show_path = not show_path
             if show_path:
+<<<<<<< Updated upstream
                 cells = visualizer.path_to_cells(solution[0], solution[2])
+=======
+                cells = visualizer.path_to_cells(config.to_xy(solution[0]), solution[2])
+>>>>>>> Stashed changes
                 visualizer.animate_path(walls, conf, cells, theme=theme)
         elif option == "3":
             theme = choose_theme(theme)
