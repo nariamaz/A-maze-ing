@@ -1,33 +1,28 @@
-# ============================================================
-#  CORES
-#  Cada cor é uma tupla (R, G, B), com valores de 0 a 255.
-#  (0, 0, 0) = preto | (255, 255, 255) = branco | (255, 0, 0) = vermelho
-# ============================================================
 
 THEMES = {
     "classic": {
-        "wall":    (235, 235, 235),   # paredes
-        "floor":   (20, 20, 20),      # corredores
-        "entry":   (60, 200, 90),     # entrada
-        "exit":    (220, 60, 60),     # saída
-        "path":    (240, 200, 60),    # caminho da solução
-        "pattern": (80, 120, 230),    # células do "42"
+        "wall":    (235, 235, 235),
+        "floor":   (20, 20, 20),
+        "entry":   (60, 200, 90),
+        "exit":    (220, 60, 60),
+        "path":    (240, 200, 60),
+        "pattern": (80, 120, 230),
     },
     "EVA_01": {
-        "wall":    (98, 55, 148),    # roxo
-        "floor":   (153, 234, 57),    # verde
+        "wall":    (98, 55, 148),
+        "floor":   (153, 234, 57),
         "entry":   (40, 180, 120),
         "exit":    (230, 90, 70),
-        "path":    (232, 121, 12),    # laranja
-        "pattern": (11, 10, 13),      # dark
+        "path":    (232, 121, 12),
+        "pattern": (11, 10, 13),
     },
-    "florest": {
-        "wall":    (40, 80, 40),
-        "floor":   (230, 225, 200),
-        "entry":   (60, 130, 220),
-        "exit":    (200, 60, 60),
-        "path":    (240, 170, 40),
-        "pattern": (90, 55, 30),
+    "late_capitalism": {
+        "wall":    (98, 55, 148),
+        "floor":   (153, 234, 57),
+        "entry":   (40, 180, 120),
+        "exit":    (230, 90, 70),
+        "path":    (232, 121, 12),
+        "pattern": (11, 10, 13),
     },
     "vaporwave": {
         "wall":    (255, 106, 213),
@@ -37,18 +32,15 @@ THEMES = {
         "path":    (0, 220, 255),
         "pattern": (185, 236, 255),
     },
+    "blackhole": {
+        "wall":    (148, 37, 0),
+        "floor":   (97, 17, 7),
+        "entry":   (0, 0, 0),
+        "exit":    (0, 0, 0),
+        "path":    (10, 10, 10),
+        "pattern": (180, 180, 180),
+    },
 }
 
-THEME_NAMES = list(THEMES)      # ["classic", "ocean", "florest", "vaporwave"]
-DEFAULT_THEME = THEME_NAMES[1]
-
-def choose_theme(current: str) -> str:
-    print("Themes available:")
-    for i, name in enumerate(THEME_NAMES, start=1):
-        mark = " ←" if name == current else ""
-        print(f"  {i}. {name}{mark}")
-    choice = input("Theme number: ").strip()
-    if choice.isdigit() and 1 <= int(choice) <= len(THEME_NAMES):
-        return THEME_NAMES[int(choice) - 1]
-    print("Invalid option, keeping current theme.")
-    return current
+THEME_NAMES = list(THEMES)
+DEFAULT_THEME = THEME_NAMES[0]

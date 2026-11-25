@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import random
 from collections.abc import Iterator
-from typing import Optional, Tuple, Any
+from typing import Optional, Tuple
 
 from mazegen import braiding, pattern42, solver
 from mazegen.api import AbstractMazeGenerator
@@ -32,8 +32,7 @@ from mazegen.errors import (
     OverlappingEndpointsError,
     PatternCollisionError,
 )
-from app.visualizer import print_maze
-from time import sleep
+
 
 class MazeGenerator(AbstractMazeGenerator):
     """Carve a maze with an explicit-stack depth-first walk.

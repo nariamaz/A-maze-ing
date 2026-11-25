@@ -20,13 +20,16 @@ def convert_to_value(value: str) -> Any:
         return [int(p) for p in parts]
     return value.strip("\"'")
 
+
 def to_cell(point: list[int]) -> tuple[int, int]:
     """Config (x,y) -> engine (row,col)."""
     return point[1], point[0]
 
+
 def to_xy(cell: tuple[int, int]) -> tuple[int, int]:
     """Engine (row,col) -> config (x,y)."""
     return cell[1], cell[0]
+
 
 def get_config(config_file: str = "config.txt") -> dict[str, Any]:
     lines = read_config_file(config_file)
@@ -41,8 +44,8 @@ def get_config(config_file: str = "config.txt") -> dict[str, Any]:
         key = key.strip().upper()
         if not key or not all(c.isalpha() or c in "_.-" for c in key):
             raise ValueError(
-                f"line {i}: variable names must contain only letters, '_', '.' or '-'"
-            )
+                f"line {i}: variable names must contain only letters,"
+                f"'_', '.' or '-'")
         conf[key] = convert_to_value(value.strip())
     return conf
 

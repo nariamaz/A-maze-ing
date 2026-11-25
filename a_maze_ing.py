@@ -15,7 +15,7 @@ def build_maze(conf: dict[str, Any], seed: int | None):
         entry=config.to_cell(conf["ENTRY"]),
         exit=config.to_cell(conf["EXIT"]),
     )
-    visualizer.animate_generation(gen, conf)     # or gen.generate() for no animation
+    visualizer.animate_generation(gen, conf)
     walls = gen.grid
     solution = gen.solution
     with open(conf["OUTPUT_FILE"], "w") as f:
@@ -54,10 +54,11 @@ def main() -> None:
 
     while True:
         visualizer.clear_screen()
-        cells = visualizer.path_to_cells(config.to_xy(solution[0]), solution[2]) if show_path else ()
+        cells = visualizer.path_to_cells(
+            config.to_xy(solution[0]), solution[2]) if show_path else ()
         visualizer.print_maze(walls, conf, path=cells, theme=theme)
         print()
-        visualizer.print_menu(theme, show_path)        
+        visualizer.print_menu(theme, show_path)
         option = input(visualizer.style("Choice: ", 1)).strip()
         if option == "1":
             walls, solution = build_maze(conf, None)
@@ -65,7 +66,9 @@ def main() -> None:
         elif option == "2":
             show_path = not show_path
             if show_path:
-                cells = visualizer.path_to_cells(config.to_xy(solution[0]), solution[2])
+                cells = visualizer.path_to_cells(
+                    config.to_xy(solution[0]), solution[2]
+                )
                 visualizer.animate_path(walls, conf, cells, theme=theme)
         elif option == "3":
             theme = choose_theme(theme)

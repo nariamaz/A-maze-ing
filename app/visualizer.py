@@ -8,7 +8,7 @@ from app.colours import THEMES, DEFAULT_THEME
 
 NORTH, EAST, SOUTH, WEST = 1, 2, 4, 8
 RESET = "\x1b[0m"
-MENU_LINES = 6          # lines reserved below the maze for the menu
+MENU_LINES = 6
 
 Pixel = tuple[int, int, int]
 MOVES = {"N": (-1, 0), "E": (0, 1), "S": (1, 0), "W": (0, -1)}
@@ -86,10 +86,14 @@ def print_maze(
             v = grid[(r, c)]
             y, x = 2 * r + 1, 2 * c + 1
             pix[y][x] = colors["pattern"] if v == 0xF else colors["floor"]
-            if not v & NORTH: pix[y - 1][x] = colors["floor"]
-            if not v & EAST:  pix[y][x + 1] = colors["floor"]
-            if not v & SOUTH: pix[y + 1][x] = colors["floor"]
-            if not v & WEST:  pix[y][x - 1] = colors["floor"]
+            if not v & NORTH:
+                pix[y - 1][x] = colors["floor"]
+            if not v & EAST:
+                pix[y][x + 1] = colors["floor"]
+            if not v & SOUTH:
+                pix[y + 1][x] = colors["floor"]
+            if not v & WEST:
+                pix[y][x - 1] = colors["floor"]
 
     paint_path(pix, path, colors["path"])
 
@@ -115,16 +119,18 @@ def print_maze(
     sys.stdout.flush()
 
 
-def animate_generation(gen, conf: dict[str, Any], theme: str = DEFAULT_THEME) -> None:
+def animate_generation(
+    gen, conf: dict[str, Any], theme: str = DEFAULT_THEME
+) -> None:
     """Consumes gen.steps() and redraws the maze at each step."""
     clear_screen()
-    sys.stdout.write("\x1b[?25l")                 # hide cursor
+    sys.stdout.write("\x1b[?25l")
     try:
         for _ in gen.steps():
             print_maze(gen.grid, conf, theme=theme)
             sleep(1 / 100)
     finally:
-        sys.stdout.write("\x1b[0m\x1b[?25h")      # restore colours and cursor
+        sys.stdout.write("\x1b[0m\x1b[?25h")
         sys.stdout.flush()
 
 
@@ -163,8 +169,8 @@ def print_menu(theme: str, show_path: bool) -> None:
     print("┌" + title.center(inner, "─") + "┐")
 
     for key, label in options:
-        plain = f" {key}  {label}".ljust(inner)          # 1) alinha o texto puro
-        colored = plain.replace(                         # 2) depois colore só o número
+        plain = f" {key}  {label}".ljust(inner)
+        colored = plain.replace(
             key, f"{accent}\x1b[1m{key}{RESET}", 1
         )
         print("│" + colored + "│")
