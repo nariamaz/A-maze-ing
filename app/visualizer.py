@@ -8,7 +8,10 @@ from app.colours import THEMES, DEFAULT_THEME
 
 NORTH, EAST, SOUTH, WEST = 1, 2, 4, 8
 RESET = "\x1b[0m"
-MENU_LINES = 6
+MENU_LINES = 7
+SPEEDS = {"slow": 10, "medium": 60, "quick": 250}
+SPEED_NAMES = list(SPEEDS)
+DEFAULT_SPEED = "medium"
 
 Pixel = tuple[int, int, int]
 MOVES = {"N": (-1, 0), "E": (0, 1), "S": (1, 0), "W": (0, -1)}
@@ -139,13 +142,14 @@ def animate_path(
     conf: dict[str, Any],
     cells: Sequence[tuple[int, int]],
     theme: str = DEFAULT_THEME,
+    fps: int = DEFAULT_SPEED
 ) -> None:
     """Draws the path step by step, from entry to exit."""
     sys.stdout.write("\x1b[?25l")                 # hide cursor
     try:
         for i in range(2, len(cells) + 1):
             print_maze(grid, conf, path=cells[:i], theme=theme)
-            sleep(1 / 60)
+            sleep(1 / fps)
     finally:
         sys.stdout.write("\x1b[0m\x1b[?25h")      # restore cursor
         sys.stdout.flush()
@@ -153,19 +157,19 @@ def animate_path(
 
 def print_menu(theme: str, show_path: bool) -> None:
     colors = THEMES[theme]
-    accent = _fg(colors["path"])          # cor do tema para números e título
+    accent = _fg(colors["path"])
 
     options = [
         ("1", "Generate new maze"),
         ("2", f"{'Hide' if show_path else 'Show'} path"),
         ("3", f"Change theme ({theme})"),
-        ("4", "Quit"),
+        ("4", "Change path speed"),
+        ("5", "Quit")
     ]
     title = " A-Maze-ing "
     inner = max(len(f" {k}  {label}") for k, label in options) + 2
     inner = max(inner, len(title) + 2)
 
-    # topo com título centralizado na borda
     print("┌" + title.center(inner, "─") + "┐")
 
     for key, label in options:

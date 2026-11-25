@@ -3,6 +3,7 @@ import sys
 
 from app import config, visualizer
 from app.colours import THEME_NAMES, DEFAULT_THEME
+from app.visualizer import SPEEDS, SPEED_NAMES, DEFAULT_SPEED
 import mazegen
 
 
@@ -43,6 +44,18 @@ def choose_theme(current: str) -> str:
     return current
 
 
+def choose_speed(current: str) -> str:
+    print("Available speeds:")
+    for i, name in enumerate(SPEED_NAMES, start=1):
+        mark = " (current)" if name == current else ""
+        print(f"  {i}. {name}{mark}")
+    choice = input("Speed number: ").strip()
+    if choice.isdigit() and 1 <= int(choice) <= len(SPEED_NAMES):
+        return SPEED_NAMES[int(choice) - 1]
+    print("Invalid option, keeping the current speed.")
+    return current
+
+
 def main() -> None:
     config_file = sys.argv[1] if len(sys.argv) > 1 else "config.txt"
     conf = config.get_config(config_file=config_file)
@@ -50,6 +63,7 @@ def main() -> None:
 
     walls, solution = build_maze(conf, conf.get("SEED"))
     theme = DEFAULT_THEME
+    speed = DEFAULT_SPEED
     show_path = False
 
     while True:
@@ -69,10 +83,14 @@ def main() -> None:
                 cells = visualizer.path_to_cells(
                     config.to_xy(solution[0]), solution[2]
                 )
-                visualizer.animate_path(walls, conf, cells, theme=theme)
+                visualizer.animate_path(
+                    walls, conf, cells, theme=theme, fps=visualizer.SPEEDS[speed]
+                )
         elif option == "3":
             theme = choose_theme(theme)
         elif option == "4":
+            speed = choose_speed(speed)
+        elif option == "5":
             break
 
 
