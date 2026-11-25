@@ -33,9 +33,7 @@ class AbstractMazeGenerator(ABC):
     """
 
     @abstractmethod
-    def generate(
-        self, grid: dict[tuple[int, int], int], conf: dict[str, Any]
-    ) -> None:
+    def generate(self) -> None:
         """Carve the entire maze synchronously."""
 
     @abstractmethod
