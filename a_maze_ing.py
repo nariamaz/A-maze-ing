@@ -3,9 +3,9 @@ import sys
 
 from app import config, visualizer
 from app.colours import THEME_NAMES, DEFAULT_THEME
-from app.visualizer import SPEEDS, SPEED_NAMES, DEFAULT_SPEED
+from app.visualizer import SPEED_NAMES, DEFAULT_SPEED
 import mazegen
-
+from mazegen.errors import *
 
 def build_maze(conf: dict[str, Any], seed: int | None):
     gen = mazegen.MazeGenerator(
@@ -20,17 +20,14 @@ def build_maze(conf: dict[str, Any], seed: int | None):
     walls = gen.grid
     solution = gen.solution
     with open(conf["OUTPUT_FILE"], "w") as f:
-        print("--- MAZE HEX ---", file=f)
         visualizer.print_grid(walls, conf, file=f)
-        print("\n--- ENTRY AND EXIT ---", file=f)
+        print(file=f)
         x, y = config.to_xy(solution[0])
         ex, ey = config.to_xy(solution[1])
         print(f"{x}, {y}", file=f)
         print(f"{ex}, {ey}\n", file=f)
-        print("--- SOLUTION ---", file=f)
         print(solution[2], file=f)
     return walls, solution
-
 
 def choose_theme(current: str) -> str:
     print("Available themes:")
@@ -66,32 +63,34 @@ def main() -> None:
     speed = DEFAULT_SPEED
     show_path = False
 
-    while True:
-        visualizer.clear_screen()
-        cells = visualizer.path_to_cells(
-            config.to_xy(solution[0]), solution[2]) if show_path else ()
-        visualizer.print_maze(walls, conf, path=cells, theme=theme)
-        print()
-        visualizer.print_menu(theme, show_path)
-        option = input(visualizer.style("Choice: ", 1)).strip()
-        if option == "1":
-            walls, solution = build_maze(conf, None)
-            show_path = False
-        elif option == "2":
-            show_path = not show_path
-            if show_path:
-                cells = visualizer.path_to_cells(
-                    config.to_xy(solution[0]), solution[2]
-                )
-                visualizer.animate_path(
-                    walls, conf, cells, theme=theme, fps=visualizer.SPEEDS[speed]
-                )
-        elif option == "3":
-            theme = choose_theme(theme)
-        elif option == "4":
-            speed = choose_speed(speed)
-        elif option == "5":
-            break
+    # while True:
+    #     visualizer.clear_screen()
+    #     cells = visualizer.path_to_cells(
+    #         config.to_xy(solution[0]), solution[2]) if show_path else ()
+    #     visualizer.print_maze(walls, conf, path=cells, theme=theme)
+    #     print()
+    #     visualizer.print_menu(theme, show_path)
+    #     option = input(visualizer.style("Choice: ", 1)).strip()
+    #     if option == "1":
+    #         walls, solution = build_maze(conf, None)
+    #         show_path = False
+    #     elif option == "2":
+    #         show_path = not show_path
+    #         if show_path:
+    #             cells = visualizer.path_to_cells(
+    #                 config.to_xy(solution[0]), solution[2]
+    #             )
+    #             visualizer.animate_path(
+    #                 walls, conf, cells,
+    #                 theme=theme, fps=visualizer.SPEEDS[speed]
+    #             )
+    #     elif option == "3":
+    #         theme = choose_theme(theme)
+    #     elif option == "4":
+    #         speed = choose_speed(speed)
+    #     elif option == "5":
+    #         break
+
 
 
 if __name__ == "__main__":

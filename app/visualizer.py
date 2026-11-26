@@ -142,7 +142,7 @@ def animate_path(
     conf: dict[str, Any],
     cells: Sequence[tuple[int, int]],
     theme: str = DEFAULT_THEME,
-    fps: int = DEFAULT_SPEED
+    fps: int = SPEEDS[DEFAULT_SPEED]
 ) -> None:
     """Draws the path step by step, from entry to exit."""
     sys.stdout.write("\x1b[?25l")                 # hide cursor
