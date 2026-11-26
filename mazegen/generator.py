@@ -116,7 +116,12 @@ class MazeGenerator(AbstractMazeGenerator):
 
     def _place_pattern(self) -> frozenset[Cell]:
         """Choose the "42" anchor, or none when the board is too small."""
-        for anchor in pattern42.candidate_anchors(self.width, self.height):
+        pattern = pattern42.candidate_anchors(self.width, self.height)
+        if len(pattern) < 1: 
+            raise PatternCollisionError(
+                "no '42' placement avoids both entry and exit; use a "
+                "larger maze")
+        for anchor in pattern:
             row_start, row_end, col_start, col_end = (
                 pattern42.anchor_bounds(anchor)
             )
@@ -127,11 +132,6 @@ class MazeGenerator(AbstractMazeGenerator):
             )
             if not blocked:
                 return frozenset(pattern42.pattern_cells(anchor))
-        if pattern42.pattern_fits(self.width, self.height):
-            raise PatternCollisionError(
-                "no '42' placement avoids both entry and exit; use a "
-                "larger maze"
-            )
         return frozenset()
 
     @property
