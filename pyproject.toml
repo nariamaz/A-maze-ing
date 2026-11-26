@@ -12,7 +12,7 @@ license = "MIT"
 license-files = ["LICENSE.md"]
 authors = [
     { name = "fmartins" },
-    { name = "nariamaz" },
+    { name = "maridos-" },
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
