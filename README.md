@@ -279,7 +279,7 @@ generating a new maze resets the path display.
 
 **Roles.** pagente A** (fmartins): engine (`mazegen/`) — structures,
 carver, "42" pattern, solver, braiding, packaging, `pyproject.toml`,
-`LICENSE.md`; pagente B (nariamaz): application (`app/` + entry
+`LICENSE.md`; pagente B (maridos-): application (`app/` + entry
 point) — config parser, hex exporter, terminal renderer, interactive
 menu, animation bonus, `Makefile`, lint/typing config. Each person
 cross-tests the other's code (`tests/`): the peer evaluation checks
