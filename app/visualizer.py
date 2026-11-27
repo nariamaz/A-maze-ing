@@ -1,8 +1,171 @@
+"""
+Terminal-based maze visualization and animation module.
+
+This module handles the visual representation of the maze in the terminal,
+including colored rendering, path visualization, generation animation,
+and interactive menu display.
+
+It uses ANSI escape sequences to control terminal colors, cursor visibility,
+screen clearing and text formatting. The maze is rendered using RGB colors
+defined in the app.colours module.
+
+Constants:
+    NORTH, EAST, SOUTH, WEST:
+        Bitmask values representing the four possible wall directions
+        of each maze cell.
+
+    RESET:
+        ANSI escape sequence that resets terminal formatting and colors.
+
+    MENU_LINES:
+        Number of terminal lines reserved for the interactive menu.
+        Used to calculate the available height for maze rendering.
+
+    SPEEDS:
+        Dictionary containing the available path animation speeds:
+            - slow:   10 FPS
+            - medium: 60 FPS
+            - quick:  250 FPS
+
+    SPEED_NAMES:
+        List containing the available animation speed names.
+
+    DEFAULT_SPEED:
+        Default animation speed, set to “medium”.
+
+    Pixel:
+        Type alias representing an RGB color as a tuple of three integers.
+
+    MOVES:
+        Dictionary mapping cardinal directions to their corresponding
+        (row, column) movement offsets.
+
+Functions:
+    _fg(rgb):
+        Generates an ANSI escape sequence for setting the terminal
+        foreground color using RGB values.
+
+    _bg(rgb):
+        Generates an ANSI escape sequence for setting the terminal
+        background color using RGB values.
+
+    style(text, *codes):
+        Applies ANSI Select Graphic Rendition (SGR) formatting codes
+        to a string and resets the formatting at the end.
+
+    clear_screen():
+        Clears the terminal screen and scrollback buffer, then positions
+        the cursor at the top-left corner.
+
+    print_grid(grid, conf, file):
+        Exports the maze grid as plain hexadecimal values.
+        Each cell is represented by its hexadecimal wall bitmask.
+        The output can be redirected to a file through the optional
+        file parameter.
+
+    path_to_cells(entry, directions):
+        Converts a sequence of movement directions into a list of
+        maze coordinates (row, column).
+
+        The entry coordinate is provided in configuration format (x, y),
+        while the resulting coordinates use the engine format (row, col).
+
+    paint_path(pix, path, color):
+        Draws a solution path directly onto the pixel matrix.
+
+        Colors both the center of each visited cell and the intermediate
+        pixels connecting consecutive cells.
+
+    print_maze(grid, conf, path, theme):
+        Converts the maze grid into a colored pixel matrix and renders
+        it directly in the terminal.
+
+        The rendering process:
+            1. Retrieves the selected theme color palette.
+            2. Creates a pixel matrix with dimensions twice the maze
+               dimensions plus one.
+            3. Draws cell floors, walls and connecting passages.
+            4. Highlights cells with all four walls using the pattern color.
+            5. Draws the solution path when provided.
+            6. Highlights the entry and exit positions.
+            7. Adjusts the rendering dimensions to fit the terminal.
+            8. Uses ANSI foreground and background colors with Unicode
+               half-block characters to render two vertical pixels
+               in a single terminal character.
+
+    animate_generation(gen, conf, theme):
+        Animates the maze generation process.
+
+        Consumes the generator’s steps() iterator, redraws the maze
+        after every generation step and introduces a short delay
+        between frames.
+
+        Hides the terminal cursor during animation and restores
+        terminal formatting and cursor visibility afterward.
+
+    animate_path(grid, conf, cells, theme, fps):
+        Animates the solution path from the entry to the exit.
+
+        Progressively reveals the path by passing an increasingly
+        larger portion of the cell sequence to print_maze().
+
+        The animation speed is controlled by the fps parameter,
+        which determines the delay between frames.
+
+    print_menu(theme, show_path):
+        Displays the interactive terminal menu.
+
+        The menu provides the following options:
+            1. Generate a new maze.
+            2. Show or hide the solution path.
+            3. Change the visualization theme.
+            4. Change the path animation speed.
+            5. Quit the application.
+
+        The selected theme’s path color is used to highlight
+        menu option numbers.
+
+Rendering conventions:
+    The maze engine represents cells using (row, column) coordinates.
+    The configuration file represents positions using (x, y).
+
+    The pixel matrix uses an expanded coordinate system:
+        - Odd rows and columns represent cell centers.
+        - Even positions between cells represent walls or passages.
+        - The matrix dimensions are calculated as:
+              height = 2 * maze_height + 1
+              width  = 2 * maze_width + 1
+
+    Terminal rendering uses the Unicode upper-half block character (▀)
+    to display two vertically stacked pixels per terminal character.
+
+Dependencies:
+    collections.abc.Sequence:
+        Provides the Sequence type for accepting ordered collections.
+
+    time.sleep:
+        Controls the delay between animation frames.
+
+    typing.Any, typing.TextIO:
+        Provides type annotations for configuration dictionaries
+        and file output.
+
+    shutil:
+        Retrieves terminal dimensions.
+
+    sys:
+        Handles terminal input/output through standard output.
+
+    app.colours:
+        Provides the available theme palettes and the default theme.
+"""
 from collections.abc import Sequence
 from time import sleep
 from typing import Any, TextIO
+from mazegen.generator import MazeGenerator
 import shutil
 import sys
+
 
 from app.colours import THEMES, DEFAULT_THEME
 
@@ -123,7 +286,9 @@ def print_maze(
 
 
 def animate_generation(
-    gen, conf: dict[str, Any], theme: str = DEFAULT_THEME
+    gen: MazeGenerator,
+    conf: dict[str, Any],
+    theme: str = DEFAULT_THEME
 ) -> None:
     """Consumes gen.steps() and redraws the maze at each step."""
     clear_screen()
@@ -167,10 +332,14 @@ def print_menu(theme: str, show_path: bool) -> None:
         ("5", "Quit")
     ]
     title = " A-Maze-ing "
+    BOLD = "\033[1m"
+    BLINK = "\033[5m"
+    RESET = "\033[0m"
+
     inner = max(len(f" {k}  {label}") for k, label in options) + 2
     inner = max(inner, len(title) + 2)
-
-    print("┌" + title.center(inner, "─") + "┐")
+    print("┌" + title.center(inner, "─").replace(title,
+          f"{BOLD}{BLINK}{title}{RESET}", 1) + "┐")
 
     for key, label in options:
         plain = f" {key}  {label}".ljust(inner)

@@ -1,3 +1,73 @@
+"""
+Configuration file parser and validator for the maze generator.
+
+This module is responsible for reading the configuration file, converting
+its string values into appropriate Python data types, and validating
+the configuration before it is used by the maze engine.
+
+The configuration file follows the KEY=VALUE format and supports
+comments using ‘#’.
+
+Constants:
+    MANDATORY:
+        Tuple containing the configuration keys that must be present:
+        WIDTH, HEIGHT, ENTRY, EXIT, OUTPUT_FILE and PERFECT.
+
+Functions:
+    read_config_file(config_file):
+        Opens the configuration file and returns its contents as a
+        list of lines.
+
+    convert_to_value(value):
+        Converts a configuration string into its corresponding Python
+        data type:
+            - Numeric strings become integers.
+            - “True” and “False” become booleans.
+            - Comma-separated numeric values become lists of integers.
+            - Other values remain strings with surrounding quotes removed.
+
+    to_cell(point):
+        Converts coordinates from configuration format (x, y) into
+        the maze engine format (row, column).
+
+    to_xy(cell):
+        Converts coordinates from maze engine format (row, column)
+        back into configuration format (x, y).
+
+    get_config(config_file):
+        Reads and parses the configuration file into a dictionary.
+        Removes comments, ignores empty lines, normalizes variable
+        names to uppercase and converts values into Python types.
+        Raises ValueError when a line does not follow the expected
+        KEY=VALUE format or contains an invalid variable name.
+
+    check_point(name, point, width, height):
+        Validates a maze coordinate, ensuring it contains exactly
+        two integers and that both coordinates are within the maze
+        boundaries.
+
+    validate_config(conf):
+        Validates the complete configuration dictionary.
+        Checks mandatory keys, positive maze dimensions, boolean
+        PERFECT value, optional integer SEED, valid ENTRY and EXIT
+        coordinates, and ensures the entry and exit are different.
+
+Raises:
+    ValueError:
+        When configuration values are missing, incorrectly formatted,
+        have invalid data types, or violate maze constraints.
+
+Coordinate convention:
+    Configuration files use Cartesian coordinates (x, y), where
+    x represents the horizontal position and y the vertical position.
+
+    The maze engine uses matrix coordinates (row, column), where
+    row represents the vertical position and column the horizontal
+    position.
+
+    The to_cell() and to_xy() functions handle the conversion
+    between these two coordinate systems.
+"""
 from typing import Any
 
 MANDATORY = ("WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE", "PERFECT")

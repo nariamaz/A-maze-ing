@@ -7,7 +7,14 @@ from app.visualizer import SPEED_NAMES, DEFAULT_SPEED
 import mazegen
 
 
-def build_maze(conf: dict[str, Any], seed: int | None):
+def build_maze(
+    conf: dict[str, Any],
+    seed: int | None
+) -> tuple[
+    dict[tuple[int, int], int],
+    tuple[tuple[int, int], tuple[int, int], str],
+    bool
+]:
     gen = mazegen.MazeGenerator(
         width=conf["WIDTH"],
         height=conf["HEIGHT"],
@@ -105,4 +112,3 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"ERROR: {e}")
         sys.exit(1)
-
