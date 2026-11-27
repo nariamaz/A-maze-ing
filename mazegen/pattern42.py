@@ -49,8 +49,8 @@ def candidate_anchors(width: int, height: int) -> List[Coordinates]:
     """
     if not pattern_fits(width, height):
         return []
-    rows = range(1, height - PATTERN_HEIGHT)  # margem superior >= 1
-    cols = range(1, width - PATTERN_WIDTH)    # margem esquerda >= 1
+    rows = range(1, height - PATTERN_HEIGHT)
+    cols = range(1, width - PATTERN_WIDTH)
     limits = ((height - 1) / 2.0, (width - 1) / 2.0)
     anchors: List[Coordinates] = [
         (row, col) for row in rows for col in cols
