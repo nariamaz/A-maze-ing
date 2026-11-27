@@ -91,7 +91,10 @@ class MazeGenerator(AbstractMazeGenerator):
             raise OverlappingEndpointsError(
                 f"entry and exit are the same cell: {self._entry}"
             )
-        self._pattern = self._place_pattern()
+        try:  
+            self._pattern = self._place_pattern()
+        except PatternCollisionError: 
+            self._pattern = []
         self._grid: dict[Cell, int] = {
             (row, col): ALL_WALLS
             for row in range(self.height)

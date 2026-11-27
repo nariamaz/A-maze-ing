@@ -7,7 +7,9 @@ from app.visualizer import SPEED_NAMES, DEFAULT_SPEED
 import mazegen
 from mazegen.errors import *
 
-def build_maze(conf: dict[str, Any], seed: int | None):
+IS_42_DRAWABLE=True
+
+def build_maze(conf: dict[str, Any], seed: int | None): 
     gen = mazegen.MazeGenerator(
         width=conf["WIDTH"],
         height=conf["HEIGHT"],
@@ -19,6 +21,8 @@ def build_maze(conf: dict[str, Any], seed: int | None):
     visualizer.animate_generation(gen, conf)
     walls = gen.grid
     solution = gen.solution
+    if len(gen.pattern) == 0: 
+        IS_42_DRAWABLE=False
     with open(conf["OUTPUT_FILE"], "w") as f:
         visualizer.print_grid(walls, conf, file=f)
         print(file=f)
@@ -63,33 +67,36 @@ def main() -> None:
     speed = DEFAULT_SPEED
     show_path = False
 
-    # while True:
-    #     visualizer.clear_screen()
-    #     cells = visualizer.path_to_cells(
-    #         config.to_xy(solution[0]), solution[2]) if show_path else ()
-    #     visualizer.print_maze(walls, conf, path=cells, theme=theme)
-    #     print()
-    #     visualizer.print_menu(theme, show_path)
-    #     option = input(visualizer.style("Choice: ", 1)).strip()
-    #     if option == "1":
-    #         walls, solution = build_maze(conf, None)
-    #         show_path = False
-    #     elif option == "2":
-    #         show_path = not show_path
-    #         if show_path:
-    #             cells = visualizer.path_to_cells(
-    #                 config.to_xy(solution[0]), solution[2]
-    #             )
-    #             visualizer.animate_path(
-    #                 walls, conf, cells,
-    #                 theme=theme, fps=visualizer.SPEEDS[speed]
-    #             )
-    #     elif option == "3":
-    #         theme = choose_theme(theme)
-    #     elif option == "4":
-    #         speed = choose_speed(speed)
-    #     elif option == "5":
-    #         break
+    while True:
+        visualizer.clear_screen()
+        cells = visualizer.path_to_cells(
+            config.to_xy(solution[0]), solution[2]) if show_path else ()
+        visualizer.print_maze(walls, conf, path=cells, theme=theme)
+        print()
+        # Náo funciona, mas esse é o caminho
+        if not IS_42_DRAWABLE: 
+            print("ERROR: No space to draw the 42 logo. ")
+        visualizer.print_menu(theme, show_path)
+        option = input(visualizer.style("Choice: ", 1)).strip()
+        if option == "1":
+            walls, solution = build_maze(conf, None)
+            show_path = False
+        elif option == "2":
+            show_path = not show_path
+            if show_path:
+                cells = visualizer.path_to_cells(
+                    config.to_xy(solution[0]), solution[2]
+                )
+                visualizer.animate_path(
+                    walls, conf, cells,
+                    theme=theme, fps=visualizer.SPEEDS[speed]
+                )
+        elif option == "3":
+            theme = choose_theme(theme)
+        elif option == "4":
+            speed = choose_speed(speed)
+        elif option == "5":
+            break
 
 
 
