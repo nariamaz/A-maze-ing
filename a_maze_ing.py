@@ -78,7 +78,7 @@ def main() -> None:
         visualizer.print_menu(theme, show_path)
         option = input(visualizer.style("Choice: ", 1)).strip()
         if option == "1":
-            walls, solution = build_maze(conf, None)
+            walls, solution, _ = build_maze(conf, None)
             show_path = False
         elif option == "2":
             show_path = not show_path
@@ -101,6 +101,8 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
+
     except Exception as e:
         print(f"ERROR: {e}")
         sys.exit(1)
+
