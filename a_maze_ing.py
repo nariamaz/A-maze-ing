@@ -5,11 +5,9 @@ from app import config, visualizer
 from app.colours import THEME_NAMES, DEFAULT_THEME
 from app.visualizer import SPEED_NAMES, DEFAULT_SPEED
 import mazegen
-from mazegen.errors import *
 
-IS_42_DRAWABLE=True
 
-def build_maze(conf: dict[str, Any], seed: int | None): 
+def build_maze(conf: dict[str, Any], seed: int | None):
     gen = mazegen.MazeGenerator(
         width=conf["WIDTH"],
         height=conf["HEIGHT"],
@@ -21,8 +19,9 @@ def build_maze(conf: dict[str, Any], seed: int | None):
     visualizer.animate_generation(gen, conf)
     walls = gen.grid
     solution = gen.solution
-    if len(gen.pattern) == 0: 
-        IS_42_DRAWABLE=False
+    is_42_drawable = True
+    if len(gen.pattern) == 0:
+        is_42_drawable = False
     with open(conf["OUTPUT_FILE"], "w") as f:
         visualizer.print_grid(walls, conf, file=f)
         print(file=f)
@@ -31,7 +30,8 @@ def build_maze(conf: dict[str, Any], seed: int | None):
         print(f"{x}, {y}", file=f)
         print(f"{ex}, {ey}\n", file=f)
         print(solution[2], file=f)
-    return walls, solution
+    return walls, solution, is_42_drawable
+
 
 def choose_theme(current: str) -> str:
     print("Available themes:")
@@ -62,7 +62,7 @@ def main() -> None:
     conf = config.get_config(config_file=config_file)
     config.validate_config(conf)
 
-    walls, solution = build_maze(conf, conf.get("SEED"))
+    walls, solution, is_42_drawable = build_maze(conf, conf.get("SEED"))
     theme = DEFAULT_THEME
     speed = DEFAULT_SPEED
     show_path = False
@@ -73,9 +73,8 @@ def main() -> None:
             config.to_xy(solution[0]), solution[2]) if show_path else ()
         visualizer.print_maze(walls, conf, path=cells, theme=theme)
         print()
-        # Náo funciona, mas esse é o caminho
-        if not IS_42_DRAWABLE: 
-            print("ERROR: No space to draw the 42 logo. ")
+        if not is_42_drawable:
+            print("ERROR: Can't print «42» in the middle of the maze. \r\n")
         visualizer.print_menu(theme, show_path)
         option = input(visualizer.style("Choice: ", 1)).strip()
         if option == "1":
@@ -97,7 +96,6 @@ def main() -> None:
             speed = choose_speed(speed)
         elif option == "5":
             break
-
 
 
 if __name__ == "__main__":

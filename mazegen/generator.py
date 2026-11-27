@@ -29,8 +29,7 @@ from mazegen.constants import (
 from mazegen.errors import (
     InvalidDimensionsError,
     OutOfBoundsError,
-    OverlappingEndpointsError,
-    PatternCollisionError,
+    OverlappingEndpointsError
 )
 
 
@@ -91,10 +90,7 @@ class MazeGenerator(AbstractMazeGenerator):
             raise OverlappingEndpointsError(
                 f"entry and exit are the same cell: {self._entry}"
             )
-        try:  
-            self._pattern = self._place_pattern()
-        except PatternCollisionError: 
-            self._pattern = []
+        self._pattern = self._place_pattern()
         self._grid: dict[Cell, int] = {
             (row, col): ALL_WALLS
             for row in range(self.height)
@@ -120,10 +116,6 @@ class MazeGenerator(AbstractMazeGenerator):
     def _place_pattern(self) -> frozenset[Cell]:
         """Choose the "42" anchor, or none when the board is too small."""
         pattern = pattern42.candidate_anchors(self.width, self.height)
-        if len(pattern) < 1: 
-            raise PatternCollisionError(
-                "no '42' placement avoids both entry and exit; use a "
-                "larger maze")
         for anchor in pattern:
             row_start, row_end, col_start, col_end = (
                 pattern42.anchor_bounds(anchor)
